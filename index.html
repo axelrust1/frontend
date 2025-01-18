@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Clientes</h1>
+
+        <!-- Formulario para crear un cliente -->
+        <section>
+            <h2>Crear Cliente</h2>
+            <form id="create-client-form">
+                <label for="dni">DNI:</label>
+                <input type="number" id="dni" required>
+
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" required>
+
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" required>
+
+                <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                <input type="date" id="fechaNacimiento" required>
+
+                <label for="tipoPersona">Tipo de Persona:</label>
+                <select id="tipoPersona" required>
+                    <option value="F">Física</option>
+                    <option value="J">Jurídica</option>
+                </select>
+
+                <button type="submit">Crear Cliente</button>
+            </form>
+            <p id="create-client-response"></p>
+        </section>
+
+        <!-- buscar un cliente -->
+        <section>
+            <h2>Buscar Cliente</h2>
+            <form id="buscarCliente">
+                <label for="buscarDni">DNI:</label>
+                <input type="number" id="buscarDni" required>
+                <button type="submit">Buscar Cliente</button>
+            </form>
+            <div id="detallesCliente"></div>
+        </section>
+    </div>
+
+    <div class="container">
+    <section>
+        <h2>Agregar Cuenta a Cliente</h2>
+        <form id="agregarCuenta">
+            <label for="cuentaPorDni">DNI del Cliente:</label>
+            <input type="number" id="cuentaPorDni" required>
+    
+            <label for="tipoCuenta">Tipo de Cuenta:</label>
+            <select id="tipoCuenta" required>
+                <option value="A">Ahorro</option>
+                <option value="C">Corriente</option>
+            </select>
+    
+            <label for="monedaCuenta">Moneda:</label>
+            <select id="monedaCuenta" required>
+                <option value="P">Pesos</option>
+                <option value="D">Dólares</option>
+            </select>
+    
+            <button type="submit">Agregar Cuenta</button>
+        </form>
+        <p id="respuestaAgregarCuenta"></p>
+    </section>
+    <section>
+        <h2>Buscar Cuenta por Número</h2>
+        <form id="buscarCuenta">
+            <label for="numeroCuenta">Número de Cuenta:</label>
+            <input type="number" id="numeroCuenta" required>
+            <button type="submit">Buscar</button>
+        </form>
+        <p id="respuestaBuscarCuenta"></p>
+    </section>
+    
+    <section>
+        <h2>Buscar Cuentas por DNI</h2>
+        <form id="BuscarCuentaporDni">
+            <label for="BuscarCuentaDni">DNI del Cliente:</label>
+            <input type="number" id="BuscarCuentaDni" required>
+            <button type="submit">Buscar</button>
+        </form>
+        <div id="respuestaBuscarPorDni"></div>
+    </section>
+    <section>
+        <h2>Buscar Transacciones de una Cuenta</h2>
+        <form id="buscarTransacciones">
+            <label for="BuscarTransaccionPorNumero">Número de Cuenta:</label>
+            <input type="number" id="BuscarTransaccionPorNumero" required>
+            <button type="submit">Buscar Transacciones</button>
+        </form>
+        <div id="respuestaTransaccion"></div>
+    </section>
+    </div>
+    <div class="container">
+    <section>
+        <h2>Realizar Transferencia</h2>
+        <form id="transferencia">
+            <label for="cuentaOrigen">Cuenta Origen:</label>
+            <input type="number" id="cuentaOrigen" required>
+    
+            <label for="cuentaDestino">Cuenta Destino:</label>
+            <input type="number" id="cuentaDestino" required>
+    
+            <label for="montoTransferencia">Monto:</label>
+            <input type="number" id="montoTransferencia" step="0.01" required>
+    
+            <label for="monedaTransferencia">Moneda:</label>
+            <select id="monedaTransferencia" required>
+                <option value="PESOS">Pesos</option>
+                <option value="DOLARES">Dólares</option>
+            </select>
+    
+            <button type="submit">Transferir</button>
+        </form>
+        <p id="respuestaTransferencia"></p>
+    </section>
+    </div>
+    <div class="container">
+    <section>
+        <h2>Realizar Depósito</h2>
+        <form id="RealizarDeposito">
+            <label for="cuentaDeposito">Número de Cuenta:</label>
+            <input type="number" id="cuentaDeposito" required>
+    
+            <label for="montoDeposito">Monto:</label>
+            <input type="number" id="montoDeposito" step="0.01" required>
+    
+            <label for="monedaDeposito">Moneda:</label>
+            <select id="monedaDeposito" required>
+                <option value="PESOS">Pesos</option>
+                <option value="DOLARES">Dólares</option>
+            </select>
+    
+            <button type="submit">Depositar</button>
+        </form>
+        <p id="RespuestaDeposito"></p>
+    </section>
+        </div>
+        <div class="container">
+    <section>
+        <h2>Realizar Retiro</h2>
+        <form id="RealizarRetiro">
+            <label for="cuentaRetiro">Número de Cuenta:</label>
+            <input type="number" id="cuentaRetiro" required>
+    
+            <label for="montoRetiro">Monto:</label>
+            <input type="number" id="montoRetiro" step="0.01" required>
+    
+            <label for="monedaRetiro">Moneda:</label>
+            <select id="monedaRetiro" required>
+                <option value="PESOS">Pesos</option>
+                <option value="DOLARES">Dólares</option>
+            </select>
+    
+            <button type="submit">Retirar</button>
+        </form>
+        <p id="respuestaRetiro"></p>
+    </section>
+    
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
