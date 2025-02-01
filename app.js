@@ -90,7 +90,7 @@ document.getElementById("buscarParaEditar").addEventListener("click", async () =
         document.getElementById("editarNombre").value = data.nombre;
         document.getElementById("editarApellido").value = data.apellido;
         document.getElementById("editarFechaNacimiento").value = data.fechaNacimiento;
-        document.getElementById("editarTipoPersona").value = data.tipoPersona === 'PERSONA_FISICA' ? 'Fisica' : 'Jurídica';
+        document.getElementById("editarTipoPersona").value = data.tipoPersona === 'F' ? 'Física' : 'Jurídica';
         
         document.getElementById("datosParaEditar").style.display = "block";
         
@@ -123,7 +123,7 @@ document.getElementById("editarCliente").addEventListener("submit", async (event
         nombre: document.getElementById("editarNombre").value,
         apellido: document.getElementById("editarApellido").value,
         fechaNacimiento: document.getElementById("editarFechaNacimiento").value,
-        tipoPersona: document.getElementById("editarTipoPersona").value === "Jurídica" ? "J" : "F"
+        tipoPersona: document.getElementById("editarTipoPersona").value === "J" ? "Juridica" : "Fisica"
     };
 
     try {
