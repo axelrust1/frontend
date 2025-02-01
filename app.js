@@ -125,7 +125,7 @@ document.getElementById("editarCliente").addEventListener("submit", async (event
         fechaNacimiento: document.getElementById("editarFechaNacimiento").value,
         tipoPersona: document.getElementById("editarTipoPersona").value === "Jurídica" ? "J" : "F"
     };
-    //je
+    //jeje
 
     try {
         const response = await fetch(`${API_BASE_URL}/${dni}`, {
