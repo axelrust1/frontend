@@ -90,7 +90,7 @@ document.getElementById("buscarParaEditar").addEventListener("click", async () =
         document.getElementById("editarNombre").value = data.nombre;
         document.getElementById("editarApellido").value = data.apellido;
         document.getElementById("editarFechaNacimiento").value = data.fechaNacimiento;
-        document.getElementById("editarTipoPersona").value = data.tipoPersona === 'PERSONA_FISICA' ? 'F' : 'J';
+        document.getElementById("editarTipoPersona").value = data.tipoPersona === 'PERSONA_FISICA' ? 'Fisica' : 'Jurídica';
         
         document.getElementById("datosParaEditar").style.display = "block";
         
