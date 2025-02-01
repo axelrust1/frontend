@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8080/cliente";
+const API_BASE_URL = "https://practicasprofesionales-4.onrender.com/cliente";
 
 document.getElementById("create-client-form").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -15,7 +15,7 @@ document.getElementById("create-client-form").addEventListener("submit", async (
     console.log('Datos a enviar:', cliente);
 
     try {
-        const response = await fetch('http://localhost:8080/cliente', {
+        const response = await fetch('https://practicasprofesionales-4.onrender.com/cliente', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -231,7 +231,7 @@ document.getElementById("agregarCuenta").addEventListener("submit", async (event
     console.log('Datos de la cuenta a enviar:', cuenta); 
 
     try {
-        const response = await fetch("http://localhost:8080/cuenta", { 
+        const response = await fetch("https://practicasprofesionales-4.onrender.com/cuenta", { 
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -256,7 +256,7 @@ document.getElementById("agregarCuenta").addEventListener("submit", async (event
     }
 });
 
-const API_ACCOUNT_URL = "http://localhost:8080/cuenta";
+const API_ACCOUNT_URL = "https://practicasprofesionales-4.onrender.com/cuenta";
 
 //buscar cuenta
 document.getElementById("buscarCuenta").addEventListener("submit", async (event) => {
@@ -441,7 +441,7 @@ document.getElementById("buscarTransacciones").addEventListener("submit", async 
 });
 
 
-const API_TRANSACTION_URL = "http://localhost:8080/api";
+const API_TRANSACTION_URL = "https://practicasprofesionales-4.onrender.com/api";
 
 //transferencia
 document.getElementById("transferencia").addEventListener("submit", async (event) => {
