@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://practicasprofesionales-4.onrender.com/cliente";
+const API_BASE_URL = "http://localhost:8080/cliente";
 
 document.getElementById("create-client-form").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -15,7 +15,7 @@ document.getElementById("create-client-form").addEventListener("submit", async (
     console.log('Datos a enviar:', cliente);
 
     try {
-        const response = await fetch('https://practicasprofesionales-4.onrender.com/cliente', {
+        const response = await fetch('http://localhost:8080/cliente', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -64,12 +64,160 @@ document.getElementById("buscarCliente").addEventListener("submit", async (event
         `;
         document.getElementById("detallesCliente").innerHTML = details;
     } catch (error) {
-        document.getElementById("detallesCliente").textContent = `Error al buscar cliente: ${error.message}`;
-        console.error(error);
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al Buscar Cliente',
+            text: `No se encontró el cliente con DNI: ${dni}`,
+            confirmButtonColor: '#E74C3C'
+        });
     }
 }
 
 );
+document.getElementById("buscarParaEditar").addEventListener("click", async () => {
+    const dni = document.getElementById("editarDni").value;
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/${dni}`);
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        document.getElementById("editarNombre").value = data.nombre;
+        document.getElementById("editarApellido").value = data.apellido;
+        document.getElementById("editarFechaNacimiento").value = data.fechaNacimiento;
+        document.getElementById("editarTipoPersona").value = data.tipoPersona === 'F' ? 'Física' : 'Jurídica';
+        
+        document.getElementById("datosParaEditar").style.display = "block";
+        
+        document.getElementById("editarDni").disabled = true;
+        document.getElementById("buscarParaEditar").disabled = true;
+
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al Buscar Cliente',
+            text: `No se encontró el cliente con DNI: ${dni}`,
+            confirmButtonColor: '#E74C3C'
+        });
+    }
+});
+
+document.getElementById("editarCliente").addEventListener("reset", () => {
+    document.getElementById("datosParaEditar").style.display = "none";
+    document.getElementById("editarDni").disabled = false;
+    document.getElementById("buscarParaEditar").disabled = false;
+});
+
+
+document.getElementById("editarCliente").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const dni = parseInt(document.getElementById("editarDni").value);
+    const clienteUpdate = {
+        nombre: document.getElementById("editarNombre").value,
+        apellido: document.getElementById("editarApellido").value,
+        fechaNacimiento: document.getElementById("editarFechaNacimiento").value,
+        tipoPersona: document.getElementById("editarTipoPersona").value === "Jurídica" ? "J" : "F"
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/${dni}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(clienteUpdate),
+            mode: 'cors'
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log('Cliente actualizado:', data);
+        
+        Swal.fire({
+            icon: 'success',
+            title: 'Cliente Actualizado',
+            text: 'El nombre y apellido del cliente fueron actualizados exitosamente',
+            confirmButtonColor: '#4CAF50'
+        });
+        
+        document.getElementById("editarCliente").reset();
+        
+    } catch (error) {
+        console.error('Error:', error);
+        
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al Actualizar',
+            text: `Error al actualizar cliente: ${error.message}`,
+            confirmButtonColor: '#E74C3C'
+        });
+    }
+});
+
+//eliminar cliente
+document.getElementById("eliminarCliente").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const dni = document.getElementById("eliminarDni").value;
+
+    try {
+        const confirmResult = await Swal.fire({
+            title: '¿Está seguro?',
+            text: "Esta acción no se puede deshacer",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (confirmResult.isConfirmed) {
+            const response = await fetch(`${API_BASE_URL}/${dni}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                mode: 'cors'
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Cliente Eliminado',
+                text: 'El cliente ha sido eliminado exitosamente',
+                confirmButtonColor: '#4CAF50'
+            });
+
+            document.getElementById("eliminarCliente").reset();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al Eliminar',
+            text: `Error al eliminar cliente: ${error.message}`,
+            confirmButtonColor: '#E74C3C'
+        });
+    }
+});
 
 document.getElementById("agregarCuenta").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -83,7 +231,7 @@ document.getElementById("agregarCuenta").addEventListener("submit", async (event
     console.log('Datos de la cuenta a enviar:', cuenta); 
 
     try {
-        const response = await fetch("https://practicasprofesionales-4.onrender.com/cuenta", { 
+        const response = await fetch("http://localhost:8080/cuenta", { 
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -108,8 +256,9 @@ document.getElementById("agregarCuenta").addEventListener("submit", async (event
     }
 });
 
-const API_ACCOUNT_URL = "https://practicasprofesionales-4.onrender.com/cuenta"; 
+const API_ACCOUNT_URL = "http://localhost:8080/cuenta";
 
+//buscar cuenta
 document.getElementById("buscarCuenta").addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -134,13 +283,27 @@ document.getElementById("buscarCuenta").addEventListener("submit", async (event)
             <p><strong>Moneda:</strong> ${data.moneda}</p>
         `;
         document.getElementById("respuestaBuscarCuenta").innerHTML = details;
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Cuenta Encontrada',
+            text: `La cuenta ${data.numeroCuenta} fue encontrada exitosamente`,
+            confirmButtonColor: '#4CAF50'
+        });
+
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById("respuestaBuscarCuenta").textContent = 
-            `Error al buscar la cuenta: ${error.message}`;
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al Buscar Cuenta',
+            text: `Error al buscar la cuenta: ${error.message}`,
+            confirmButtonColor: '#E74C3C'
+        });
     }
 });
 
+//buscar cuent ax dni
 document.getElementById("BuscarCuentaporDni").addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -173,12 +336,27 @@ document.getElementById("BuscarCuentaporDni").addEventListener("submit", async (
         accountList += "</ul>";
 
         document.getElementById("respuestaBuscarPorDni").innerHTML = accountList;
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Cuentas Encontradas',
+            text: `Se encontraron ${data.length} cuentas para el DNI ${dni}`,
+            confirmButtonColor: '#4CAF50'
+        });
+
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById("respuestaBuscarPorDni").textContent = 
-            `Error al buscar cuentas: ${error.message}`;
-    }   
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al Buscar Cuentas',
+            text: `Error al buscar cuentas: ${error.message}`,
+            confirmButtonColor: '#E74C3C'
+        });
+    }
 });
+
+//buscar movimientos
 document.getElementById("buscarTransacciones").addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -189,33 +367,51 @@ document.getElementById("buscarTransacciones").addEventListener("submit", async 
 
         if (!response.ok) {
             if (response.status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cuenta no encontrada',
+                    text: 'La cuenta que buscás no existe.',
+                    confirmButtonColor: '#E74C3C'
+                });
                 throw new Error("Cuenta no encontrada.");
             } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error en la solicitud',
+                    text: `Error: ${response.status}`,
+                    confirmButtonColor: '#E74C3C'
+                });
                 throw new Error(`Error: ${response.status}`);
             }
         }
 
         const data = await response.json();
 
-        // Verifica si el objeto recibido tiene transacciones
         if (!data || !data.transacciones || data.transacciones.length === 0) {
             document.getElementById("respuestaTransaccion").textContent =
                 "No se encontraron transacciones para esta cuenta.";
+
+            Swal.fire({
+                icon: 'info',
+                title: 'Sin Transacciones',
+                text: 'No se encontraron transacciones para esta cuenta.',
+                confirmButtonColor: '#3498DB'
+            });
+
             return;
         }
 
-        // Muestra los movimientos
         const transactionsList = data.transacciones
             .map(
                 (transaction) => `
-                <div>
-                    <p><strong>Fecha:</strong> ${transaction.fecha}</p>
-                    <p><strong>Tipo:</strong> ${transaction.tipo}</p>
-                    <p><strong>Descripción:</strong> ${transaction.descripcionBreve}</p>
-                    <p><strong>Monto:</strong> ${transaction.monto}</p>
-                </div>
-                <hr>
-            `
+                    <div>
+                        <p><strong>Fecha:</strong> ${transaction.fecha}</p>
+                        <p><strong>Tipo:</strong> ${transaction.tipo}</p>
+                        <p><strong>Descripción:</strong> ${transaction.descripcionBreve}</p>
+                        <p><strong>Monto:</strong> ${transaction.monto}</p>
+                    </div>
+                    <hr>
+                `
             )
             .join("");
 
@@ -223,17 +419,31 @@ document.getElementById("buscarTransacciones").addEventListener("submit", async 
             <h3>Transacciones para la Cuenta ${data.numeroCuenta}</h3>
             ${transactionsList}
         `;
+        Swal.fire({
+            icon: 'success',
+            title: 'Transacciones Encontradas',
+            text: `Se encontraron ${data.transacciones.length} transacciones para la cuenta ${data.numeroCuenta}.`,
+            confirmButtonColor: '#4CAF50'
+        });
+
     } catch (error) {
         console.error("Error:", error);
         document.getElementById("respuestaTransaccion").textContent =
             `Error al buscar transacciones: ${error.message}`;
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Error al buscar transacciones',
+            text: `${error.message}`,
+            confirmButtonColor: '#E74C3C'
+        });
     }
 });
-//ERROR MODIFICAR
-//PREGUNTAR
-const API_TRANSACTION_URL = "https://practicasprofesionales-4.onrender.com/api"; // Cambia la URL si es necesario
 
-// Transferencia
+
+const API_TRANSACTION_URL = "http://localhost:8080/api";
+
+//transferencia
 document.getElementById("transferencia").addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -256,16 +466,12 @@ document.getElementById("transferencia").addEventListener("submit", async (event
         ),
     });
 
-    // Leer la respuesta como JSON
     const data = await response.json();
 
-    // Verificar si el servidor indicó un error en el cuerpo de la respuesta
     if (!response.ok || data.estado === "FALLIDA") {
-        // Lanzar error con el mensaje del backend si está disponible
         throw new Error(data.mensaje || `Error inesperado: HTTP ${response.status}`);
     }
 
-    // Éxito: muestra una alerta verde
     Swal.fire({
         icon: "success",
         title: "Transferencia Exitosa",
@@ -275,7 +481,6 @@ document.getElementById("transferencia").addEventListener("submit", async (event
 } catch (error) {
     console.error("Error al realizar transferencia:", error);
 
-    // Error: muestra una alerta roja
     Swal.fire({
         icon: "error",
         title: "Error al realizar transferencia",
@@ -284,8 +489,7 @@ document.getElementById("transferencia").addEventListener("submit", async (event
     });
 }
 });
-//MODIFICAR LAS ALERTAS
-// Depósito
+//deposito
 document.getElementById("RealizarDeposito").addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -307,16 +511,12 @@ document.getElementById("RealizarDeposito").addEventListener("submit", async (ev
             ),
         });
 
-        // Leer la respuesta como JSON
         const data = await response.json();
 
-        // Verificar si el servidor indicó un error en el cuerpo de la respuesta
         if (!response.ok || data.estado === "FALLIDA") {
-            // Lanzar error con el mensaje del backend si está disponible
             throw new Error(data.mensaje || `Error inesperado: HTTP ${response.status}`);
         }
 
-        // Éxito: muestra una alerta verde
         Swal.fire({
             icon: "success",
             title: "Depósito Exitoso",
@@ -326,7 +526,6 @@ document.getElementById("RealizarDeposito").addEventListener("submit", async (ev
     } catch (error) {
         console.error("Error al realizar depósito:", error);
 
-        // Error: muestra una alerta roja
         Swal.fire({
             icon: "error",
             title: "Error al realizar depósito",
@@ -338,7 +537,7 @@ document.getElementById("RealizarDeposito").addEventListener("submit", async (ev
 
 
 
-// Retiro
+//retiro
 document.getElementById("RealizarRetiro").addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -359,17 +558,11 @@ document.getElementById("RealizarRetiro").addEventListener("submit", async (even
                 typeof value === 'bigint' ? value.toString() : value
             ),
         });
-
-        // Leer la respuesta como JSON
         const data = await response.json();
-
-        // Verificar si el servidor indicó un error en el cuerpo de la respuesta
         if (!response.ok || data.estado === "FALLIDA") {
-            // Lanzar error con el mensaje del backend si está disponible
             throw new Error(data.mensaje || `Error inesperado: HTTP ${response.status}`);
         }
 
-        // Éxito: muestra una alerta verde
         Swal.fire({
             icon: "success",
             title: "Retiro Exitoso",
@@ -379,7 +572,6 @@ document.getElementById("RealizarRetiro").addEventListener("submit", async (even
     } catch (error) {
         console.error("Error al realizar retiro:", error);
 
-        // Error: muestra una alerta roja
         Swal.fire({
             icon: "error",
             title: "Error al realizar retiro",
