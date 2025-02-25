@@ -8,7 +8,3 @@ Pasos a seguir:
 4. Hacer click derecho sobre el index.html.
 5. Seleccionar la opcion "Open with Live Server".
 6. Se abrira una pestania en tu navegador predeterminado para la utilizacion de la pagina.
-
-# Opcion alternativa.
-
-Ingresar al siguiente link: https://axelrust1.github.io/frontend/
